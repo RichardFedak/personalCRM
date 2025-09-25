@@ -1,82 +1,85 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { ContactsFilter } from '@/components/ui/contacts/ContactsFilter';
+import { ContactsList } from '@/components/ui/contacts/ContactsList';
+import * as schema from '@/db/schema';
+import { Ionicons } from '@expo/vector-icons';
+import { desc, eq } from 'drizzle-orm';
+import { drizzle, useLiveQuery } from 'drizzle-orm/expo-sqlite';
+import { useSQLiteContext } from 'expo-sqlite';
+import { useMemo, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import 'react-native-get-random-values';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <Text className='color-white text-6xl'>Welcome!</Text>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-        </Link>
+  const db = useSQLiteContext();
+  const drizzleDb = drizzle(db, { schema });
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+  const { data: contacts } = useLiveQuery(
+    drizzleDb.select().from(schema.contacts)
+      .orderBy(desc(schema.contacts.lastEdited))
+  );
+
+
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'lastEdited' | 'created'>('lastEdited');
+
+  const filteredContacts = useMemo(() => {
+    return (contacts || [])
+      .filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
+      .sort((a, b) => {
+        if (sortBy === 'lastEdited') {
+          return new Date(b.lastEdited).getTime() - new Date(a.lastEdited).getTime();
+        }
+        return new Date(b.created).getTime() - new Date(a.created).getTime();
+      });
+  }, [contacts, search, sortBy]);
+  
+  const handleDeleteContact = async (id: number) => {
+    await drizzleDb.delete(schema.contacts)
+      .where(eq(schema.contacts.id, id))
+      .run();
+  };
+
+  return (
+    <SafeAreaView className="flex-1 bg-white dark:bg-black">
+      <ThemedView className="px-4 py-6">
+        <ThemedText type="title" className="text-3xl font-bold mb-4">
+          My Contacts
         </ThemedText>
+
+        <ContactsFilter
+          search={search}
+          setSearch={setSearch}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+
+        <ContactsList
+          contacts={filteredContacts}
+          onDelete={handleDeleteContact}
+        />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+
+      <TouchableOpacity
+        className="absolute bottom-6 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
+        activeOpacity={0.7}
+        onPress={async () => {
+          await drizzleDb.insert(schema.contacts).values({
+            uuid: uuidv4(),
+            name: 'New Contact',
+            address: '',
+            created: new Date().toISOString(),
+            lastEdited: new Date().toISOString(),
+          });
+        }}
+      >
+        <Ionicons name="add" size={28} color="white" />
+      </TouchableOpacity>
+
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
