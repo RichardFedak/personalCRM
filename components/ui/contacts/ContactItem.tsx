@@ -1,5 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import { Link, useRouter } from "expo-router";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 export type Contact = {
   id: number;
@@ -15,20 +16,27 @@ type ContactItemProps = {
 };
 
 export function ContactItem({ contact, onDelete }: ContactItemProps) {
+  const router = useRouter();
+
   const handleDelete = () => {
     Alert.alert(
-      'Delete Contact',
+      "Delete Contact",
       `Are you sure you want to delete "${contact.name}"?`,
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => onDelete(contact.id) },
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => onDelete(contact.id) },
       ]
     );
   };
 
   return (
-    <View className="mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 p-4 shadow-sm">
-      
+    <Link
+      href={{
+      pathname: "/contact-detail/[userId]",
+      params: { userId: String(contact.id) }
+      }}
+      className="mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 p-4 shadow-sm"
+    >
       <View className="flex-row justify-between items-center mb-2">
         <Text className="text-lg font-semibold text-gray-900 dark:text-white flex-1">
           {contact.name}
@@ -40,7 +48,9 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
 
       {contact.address ? (
         <View className="mb-2">
-          <Text className="text-gray-600 dark:text-gray-300">{contact.address}</Text>
+          <Text className="text-gray-600 dark:text-gray-300">
+            {contact.address}
+          </Text>
         </View>
       ) : null}
 
@@ -52,6 +62,6 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
           Last Edited: {contact.lastEdited}
         </Text>
       </View>
-    </View>
+    </Link>
   );
 }
