@@ -34,6 +34,7 @@ export default function RootLayout() {
         >
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
+            <Stack.Screen name="contact-new/index" options={{ title: "New contact"}} />
           </Stack>
         </SQLiteProvider>
       </Suspense>
