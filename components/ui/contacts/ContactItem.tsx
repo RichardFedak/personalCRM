@@ -1,10 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import { Link, useRouter } from "expo-router";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 export type Contact = {
   id: number;
   name: string;
   address: string | null;
+  phone: string | null;
   created: string;
   lastEdited: string;
 };
@@ -15,22 +17,29 @@ type ContactItemProps = {
 };
 
 export function ContactItem({ contact, onDelete }: ContactItemProps) {
+  const router = useRouter();
+
   const handleDelete = () => {
     Alert.alert(
-      'Delete Contact',
+      "Delete Contact",
       `Are you sure you want to delete "${contact.name}"?`,
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => onDelete(contact.id) },
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => onDelete(contact.id) },
       ]
     );
   };
 
   return (
-    <View className="mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 p-4 shadow-sm">
-      
+    <Link
+      href={{
+        pathname: "/contact-detail/[userId]",
+        params: { userId: String(contact.id) }
+      }}
+      className="mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 p-4 shadow-sm"
+    >
       <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-lg font-semibold text-gray-900 dark:text-white flex-1">
+        <Text className="text-lg px-2 font-semibold text-gray-900 dark:text-white flex-1">
           {contact.name}
         </Text>
         <TouchableOpacity onPress={handleDelete} className="ml-2">
@@ -39,12 +48,14 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
       </View>
 
       {contact.address ? (
-        <View className="mb-2">
-          <Text className="text-gray-600 dark:text-gray-300">{contact.address}</Text>
+        <View className="mb-2 px-2 w-full">
+          <Text className="text-gray-600 dark:text-gray-300">
+            {contact.address}
+          </Text>
         </View>
       ) : null}
 
-      <View>
+      <View className="w-full">
         <Text className="text-xs text-gray-500 dark:text-gray-400">
           Created: {contact.created}
         </Text>
@@ -52,6 +63,6 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
           Last Edited: {contact.lastEdited}
         </Text>
       </View>
-    </View>
+    </Link>
   );
 }

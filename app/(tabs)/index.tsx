@@ -6,12 +6,11 @@ import * as schema from '@/db/schema';
 import { Ionicons } from '@expo/vector-icons';
 import { desc, eq } from 'drizzle-orm';
 import { drizzle, useLiveQuery } from 'drizzle-orm/expo-sqlite';
+import { Link } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useMemo, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
 import 'react-native-get-random-values';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { v4 as uuidv4 } from 'uuid';
 
 
 export default function HomeScreen() {
@@ -64,21 +63,12 @@ export default function HomeScreen() {
         />
       </ThemedView>
 
-      <TouchableOpacity
+      <Link
         className="absolute bottom-6 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
-        activeOpacity={0.7}
-        onPress={async () => {
-          await drizzleDb.insert(schema.contacts).values({
-            uuid: uuidv4(),
-            name: 'New Contact',
-            address: '',
-            created: new Date().toISOString(),
-            lastEdited: new Date().toISOString(),
-          });
-        }}
+        href="contact-new"
       >
         <Ionicons name="add" size={28} color="white" />
-      </TouchableOpacity>
+      </Link>
 
     </SafeAreaView>
   );
