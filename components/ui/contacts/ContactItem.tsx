@@ -6,6 +6,7 @@ export type Contact = {
   id: number;
   name: string;
   address: string | null;
+  phone: string | null;
   created: string;
   lastEdited: string;
 };

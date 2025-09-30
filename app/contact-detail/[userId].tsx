@@ -1,13 +1,12 @@
-import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { ContactHeader } from "@/components/ui/contact-detail/ContactHeader";
+import Notes from "@/components/ui/contact-detail/Notes";
 import * as schema from "@/db/schema";
-import { Ionicons } from "@expo/vector-icons";
 import { desc, eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const options = {
@@ -61,42 +60,17 @@ export default function ContactDetails() {
   const currentContact = contact[0];
 
   return (
-    <SafeAreaView edges={['left','right','bottom']} className="flex-1 bg-white dark:bg-black">
+    <SafeAreaView edges={['left', 'right', 'bottom']} className="flex-1 bg-white dark:bg-black">
       <Stack.Screen options={{ title: currentContact.name }} />
       <ThemedView className="px-4 flex-1">
         <ContactHeader
           address={currentContact.address}
+          phone={currentContact.phone}
         />
 
-        <ThemedText type="title" className="text-xl font-bold mb-4">
-          Notes
-        </ThemedText>
-
-        {notes && notes.length > 0 ? (
-          notes.map((note) => (
-            <View
-              key={note.id}
-              className="mb-3 p-4 rounded-xl bg-gray-100 dark:bg-gray-800 shadow-sm"
-            >
-              <Text className="text-gray-800 dark:text-white">
-                {note.content}
-              </Text>
-              <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Last Edited: {note.lastEdited}
-              </Text>
-            </View>
-          ))
-        ) : (
-          <Text className="text-gray-500 dark:text-gray-400">No notes yet</Text>
-        )}
+        <Notes notes={notes} />
+        
       </ThemedView>
-      <TouchableOpacity
-        className="absolute bottom-16 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
-        activeOpacity={0.7}
-        onPress={handleAddNote}
-      >
-        <Ionicons name="add" size={28} color="white" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
