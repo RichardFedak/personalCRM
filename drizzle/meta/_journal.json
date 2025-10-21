@@ -15,6 +15,20 @@
       "when": 1759243464835,
       "tag": "0001_broken_cerebro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1761049367722,
+      "tag": "0002_serious_cammi",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1761051218549,
+      "tag": "0003_striped_whizzer",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "personalCRM",
-    "slug": "personalCRM",
+    "slug": "crm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.personalCRM"
     },
     "web": {
       "output": "static",
@@ -45,6 +46,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f6bc4f0d-364c-4a0e-a840-d1a6687e514f"
+      }
+    },
+    "owner": "fedakr"
   }
 }

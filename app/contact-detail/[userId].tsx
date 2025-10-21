@@ -36,16 +36,10 @@ export default function ContactDetails() {
       .orderBy(desc(schema.notes.lastEdited))
   );
 
-  const handleAddNote = async () => {
-    const now = new Date().toISOString();
-    await drizzleDb
-      .insert(schema.notes)
-      .values({
-        contactId: Number(userId),
-        content: "New Note...",
-        created: now,
-        lastEdited: now,
-      })
+
+  const handleDeleteNote = async (id: number) => {
+    await drizzleDb.delete(schema.notes)
+      .where(eq(schema.notes.id, id))
       .run();
   };
 
@@ -68,7 +62,7 @@ export default function ContactDetails() {
           phone={currentContact.phone}
         />
 
-        <Notes notes={notes} />
+        <Notes notes={notes} contactId={Number(userId)} onDelete={handleDeleteNote} />
         
       </ThemedView>
     </SafeAreaView>

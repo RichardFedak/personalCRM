@@ -13,6 +13,7 @@ export const contacts = sqliteTable('contacts', {
 export const notes = sqliteTable('notes', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   contactId: integer('contactId').notNull().references(() => contacts.id),
+  title: text('title'),
   content: text('content'),
   created: text('created').notNull(),
   lastEdited: text('lastEdited').notNull(),
