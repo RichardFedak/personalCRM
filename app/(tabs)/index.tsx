@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { ContactsFilter } from '@/components/ui/contacts/ContactsFilter';
 import { ContactsList } from '@/components/ui/contacts/ContactsList';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import * as schema from '@/db/schema';
 import { Ionicons } from '@expo/vector-icons';
 import { desc, eq } from 'drizzle-orm';
@@ -10,6 +11,7 @@ import { Link } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useMemo, useState } from 'react';
 import 'react-native-get-random-values';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -46,9 +48,12 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-black">
       <ThemedView className="px-4 py-6">
-        <ThemedText type="title" className="text-3xl font-bold mb-4">
-          My Contacts
-        </ThemedText>
+        <View className="flex-row justify-between items-center mb-4">
+          <ThemedText type="title" className="text-3xl font-bold">
+            My Contacts
+          </ThemedText>
+          <ThemeSwitcher />
+        </View>
 
         <ContactsFilter
           search={search}
@@ -65,7 +70,7 @@ export default function HomeScreen() {
 
       <Link
         className="absolute bottom-6 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
-        href="contact-new"
+        href="/contact-new"
       >
         <Ionicons name="add" size={28} color="white" />
       </Link>

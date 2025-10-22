@@ -1,6 +1,8 @@
-import { Text, TextInput } from "react-native";
+import { TextInput } from "react-native";
 import { ThemedView } from "./themed-view";
-
+import { ThemedText } from "./themed-text";
+import { useTheme } from "@/hooks/use-theme";
+import { Colors } from "@/constants/theme";
 
 type LabeledInputProps = {
   label: string;
@@ -21,11 +23,18 @@ export default function LabeledInput({
   multiline = false,
   numberOfLines = 1,
 }: LabeledInputProps) {
+  const { colorScheme } = useTheme();
+  const colors = Colors[colorScheme];
+
   return (
-    <ThemedView className="mb-5">
-      <Text className="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-300">
+    <ThemedView className="mb-5" lightColor="transparent" darkColor="transparent">
+      <ThemedText 
+        className="mb-2 text-sm font-semibold"
+        lightColor={colors.labelText}
+        darkColor={colors.labelText}
+      >
         {label}
-      </Text>
+      </ThemedText>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -33,11 +42,16 @@ export default function LabeledInput({
         keyboardType={keyboardType}
         multiline={multiline}
         numberOfLines={multiline ? numberOfLines : 1}
-        className={`border border-gray-300 dark:border-gray-700 rounded-2xl p-4 text-base text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 ${
+        className={`border rounded-2xl p-4 text-base ${
           multiline ? 'min-h-[100px] text-top' : ''
         }`}
-        placeholderTextColor="#999"
-        style={multiline ? { textAlignVertical: 'top' } : undefined}
+        style={{
+          backgroundColor: colors.inputBackground,
+          borderColor: colors.inputBorder,
+          color: colors.inputText,
+          textAlignVertical: multiline ? 'top' : 'center'
+        }}
+        placeholderTextColor={colors.inputPlaceholder}
       />
     </ThemedView>
   );

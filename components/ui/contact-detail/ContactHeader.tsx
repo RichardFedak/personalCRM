@@ -1,4 +1,7 @@
-import { Text, View } from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { useTheme } from "@/hooks/use-theme";
+import { Colors } from "@/constants/theme";
 
 type ContactFieldProps = {
   label: string;
@@ -6,21 +9,32 @@ type ContactFieldProps = {
 };
 
 function ContactField({ label, value }: ContactFieldProps) {
+  const { colorScheme } = useTheme();
+  const colors = Colors[colorScheme];
+
   return (
-    <View className="mb-3">
-      <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+    <ThemedView className="mb-3" lightColor="transparent" darkColor="transparent">
+      <ThemedText 
+        className="text-sm font-semibold"
+        lightColor={colors.textSecondary}
+        darkColor={colors.textSecondary}
+      >
         {label}
-      </Text>
+      </ThemedText>
       {value ? (
-        <Text className="mt-1 text-base text-gray-800 dark:text-gray-200">
+        <ThemedText className="mt-1 text-base">
           {value}
-        </Text>
+        </ThemedText>
       ) : (
-        <Text className="mt-1 text-base italic text-gray-400">
+        <ThemedText 
+          className="mt-1 text-base italic"
+          lightColor={colors.textPlaceholder}
+          darkColor={colors.textPlaceholder}
+        >
           No {label.toLowerCase()}
-        </Text>
+        </ThemedText>
       )}
-    </View>
+    </ThemedView>
   );
 }
 
@@ -30,10 +44,18 @@ type ContactHeaderProps = {
 };
 
 export function ContactHeader({ address, phone }: ContactHeaderProps) {
+  const { colorScheme } = useTheme();
+  const colors = Colors[colorScheme];
+
   return (
-    <View className="mb-6 rounded-2xl p-4 bg-gray-50 dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700">
+    <ThemedView 
+      className="mb-6 rounded-2xl p-4 shadow-sm border"
+      lightColor={colors.headerBackground}
+      darkColor={colors.headerBackground}
+      style={{ borderColor: colors.headerBorder }}
+    >
       <ContactField label="Address" value={address} />
       <ContactField label="Phone number" value={phone} />
-    </View>
+    </ThemedView>
   );
 }

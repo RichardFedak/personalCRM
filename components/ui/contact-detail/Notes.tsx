@@ -1,14 +1,20 @@
 import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import { Note } from "@/db/schema";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { Text, View, TouchableOpacity, Alert, Pressable } from "react-native";
+import { TouchableOpacity, Alert, Pressable } from "react-native";
+import { useTheme } from "@/hooks/use-theme";
+import { Colors } from "@/constants/theme";
 
 export default function Notes({ notes, contactId, onDelete }: { 
   notes: Note[] | undefined; 
   contactId: number; 
   onDelete: (id: number) => void; 
 }) {
+    const { colorScheme } = useTheme();
+    const colors = Colors[colorScheme];
+
     const handleDelete = (note: Note) => {
         Alert.alert(
             "Delete Note",
@@ -29,7 +35,8 @@ export default function Notes({ notes, contactId, onDelete }: {
                 notes.map((note) => (
                     <Pressable
                         key={note.id}
-                        className="mb-3 p-4 rounded-xl bg-gray-100 dark:bg-gray-800 shadow-sm"
+                        className="mb-3 p-4 rounded-xl shadow-sm"
+                        style={{ backgroundColor: colors.noteBackground }}
                         onPress={() => {
                             // Navigate to edit note
                         }}
@@ -47,10 +54,10 @@ export default function Notes({ notes, contactId, onDelete }: {
                             asChild
                         >
                             <Pressable>
-                                <View className="flex-row justify-between items-start mb-1">
-                                    <Text className="text-gray-800 dark:text-white font-semibold text-base flex-1">
+                                <ThemedView className="flex-row justify-between items-start mb-1" lightColor="transparent" darkColor="transparent">
+                                    <ThemedText className="font-semibold text-base flex-1">
                                         {note.title || "Untitled Note"}
-                                    </Text>
+                                    </ThemedText>
                                     <TouchableOpacity 
                                         onPress={(e) => {
                                             e.stopPropagation();
@@ -58,29 +65,44 @@ export default function Notes({ notes, contactId, onDelete }: {
                                         }} 
                                         className="ml-2"
                                     >
-                                        <Ionicons name="trash" size={20} color="red" />
+                                        <Ionicons name="trash" size={20} color={colors.destructive} />
                                     </TouchableOpacity>
-                                </View>
+                                </ThemedView>
                                 {note.content && (
-                                    <Text className="text-gray-600 dark:text-gray-300 text-sm mb-2" numberOfLines={2}>
+                                    <ThemedText 
+                                        className="text-sm mb-2" 
+                                        numberOfLines={2}
+                                        lightColor={colors.textSecondary}
+                                        darkColor={colors.textSecondary}
+                                    >
                                         {note.content.length > 100 
                                             ? `${note.content.substring(0, 100)}...` 
                                             : note.content
                                         }
-                                    </Text>
+                                    </ThemedText>
                                 )}
-                                <Text className="text-xs text-gray-500 dark:text-gray-400">
+                                <ThemedText 
+                                    className="text-xs"
+                                    lightColor={colors.textMuted}
+                                    darkColor={colors.textMuted}
+                                >
                                     Last Edited: {note.lastEdited}
-                                </Text>
+                                </ThemedText>
                             </Pressable>
                         </Link>
                     </Pressable>
                 ))
             ) : (
-                <Text className="text-gray-500 dark:text-gray-400">No notes yet</Text>
+                <ThemedText 
+                    lightColor={colors.textMuted}
+                    darkColor={colors.textMuted}
+                >
+                    No notes yet
+                </ThemedText>
             )}
             <Link
-                className="absolute bottom-6 right-6 bg-blue-500 p-4 rounded-full shadow-lg"
+                className="absolute bottom-6 right-6 p-4 rounded-full shadow-lg"
+                style={{ backgroundColor: colors.primary }}
                 href={`/note-new?contactId=${contactId}`}
             >
                 <Ionicons name="add" size={28} color="white" />

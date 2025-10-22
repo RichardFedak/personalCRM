@@ -1,6 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Link } from "expo-router";
+import { Alert, TouchableOpacity } from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { useTheme } from "@/hooks/use-theme";
+import { Colors } from "@/constants/theme";
 
 export type Contact = {
   id: number;
@@ -17,7 +21,8 @@ type ContactItemProps = {
 };
 
 export function ContactItem({ contact, onDelete }: ContactItemProps) {
-  const router = useRouter();
+  const { colorScheme } = useTheme();
+  const colors = Colors[colorScheme];
 
   const handleDelete = () => {
     Alert.alert(
@@ -36,33 +41,74 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
         pathname: "/contact-detail/[userId]",
         params: { userId: String(contact.id) }
       }}
-      className="mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 p-4 shadow-sm"
+      asChild
     >
-      <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-lg px-2 font-semibold text-gray-900 dark:text-white flex-1">
-          {contact.name}
-        </Text>
-        <TouchableOpacity onPress={handleDelete} className="ml-2">
-          <Ionicons name="trash" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity>
+        <ThemedView 
+          lightColor={colors.cardBackground} 
+          darkColor={colors.cardBackground}
+          className="mb-4 rounded-2xl p-4 shadow-sm"
+        >
+          <ThemedView className="flex-row justify-between items-center mb-2" lightColor="transparent" darkColor="transparent">
+            <ThemedText 
+              type="defaultSemiBold" 
+              className="text-lg px-2 flex-1"
+            >
+              {contact.name}
+            </ThemedText>
+            <TouchableOpacity 
+              onPress={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }} 
+              className="ml-2"
+            >
+              <Ionicons name="trash" size={24} color={colors.destructive} />
+            </TouchableOpacity>
+          </ThemedView>
 
-      {contact.address ? (
-        <View className="mb-2 px-2 w-full">
-          <Text className="text-gray-600 dark:text-gray-300">
-            {contact.address}
-          </Text>
-        </View>
-      ) : null}
+          {contact.address ? (
+            <ThemedView className="mb-2 px-2 w-full" lightColor="transparent" darkColor="transparent">
+              <ThemedText 
+                lightColor={colors.textSecondary} 
+                darkColor={colors.textSecondary}
+                className="text-sm"
+              >
+                {contact.address}
+              </ThemedText>
+            </ThemedView>
+          ) : null}
 
-      <View className="w-full">
-        <Text className="text-xs text-gray-500 dark:text-gray-400">
-          Created: {contact.created}
-        </Text>
-        <Text className="text-xs text-gray-500 dark:text-gray-400">
-          Last Edited: {contact.lastEdited}
-        </Text>
-      </View>
+          {contact.phone ? (
+            <ThemedView className="mb-2 px-2 w-full" lightColor="transparent" darkColor="transparent">
+              <ThemedText 
+                lightColor={colors.textSecondary} 
+                darkColor={colors.textSecondary}
+                className="text-sm"
+              >
+                📞 {contact.phone}
+              </ThemedText>
+            </ThemedView>
+          ) : null}
+
+          <ThemedView className="w-full px-2" lightColor="transparent" darkColor="transparent">
+            <ThemedText 
+              lightColor={colors.textSecondary} 
+              darkColor={colors.textSecondary}
+              className="text-xs"
+            >
+              Created: {new Date(contact.created).toLocaleDateString()}
+            </ThemedText>
+            <ThemedText 
+              lightColor={colors.textSecondary} 
+              darkColor={colors.textSecondary}
+              className="text-xs"
+            >
+              Last Edited: {new Date(contact.lastEdited).toLocaleDateString()}
+            </ThemedText>
+          </ThemedView>
+        </ThemedView>
+      </TouchableOpacity>
     </Link>
   );
 }

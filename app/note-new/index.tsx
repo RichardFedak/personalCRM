@@ -1,19 +1,24 @@
 import LabeledInput from "@/components/labeled-input";
 import * as schema from "@/db/schema"; 
 import { ThemedView } from "@/components/themed-view";
+import { ThemedText } from "@/components/themed-text";
 import { drizzle } from "drizzle-orm/expo-sqlite/driver";
 import { useSQLiteContext } from "expo-sqlite";
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, Text } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import { eq } from "drizzle-orm";
+import { useTheme } from "@/hooks/use-theme";
+import { Colors } from "@/constants/theme";
 
 export default function NewNote(){
 
     const db = useSQLiteContext();
     const drizzleDb = drizzle(db, { schema });
     const router = useRouter();
+    const { colorScheme } = useTheme();
+    const colors = Colors[colorScheme];
     const { contactId, noteId, title: initialTitle, content: initialContent } = useLocalSearchParams<{ 
         contactId?: string; 
         noteId?: string;
@@ -88,14 +93,15 @@ export default function NewNote(){
             <Stack.Screen options={{ title: isEditing ? "Edit Note" : "New Note" }} />
             <SafeAreaView
              edges={["left", "right", "bottom"]}
-                className="flex-1 bg-white dark:bg-black px-4 py-6"
+                style={{ backgroundColor: colors.background }}
+                className="flex-1 px-4 py-6"
             >
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 className="flex-1"
             >
                 <ScrollView contentContainerStyle={{ padding: 16 }}>
-                    <ThemedView className="mb-4">
+                    <ThemedView className="mb-4" lightColor="transparent" darkColor="transparent">
                         <LabeledInput
                             label="Title"
                             value={title}
@@ -113,11 +119,16 @@ export default function NewNote(){
 
                         <TouchableOpacity
                             onPress={handleSave}
-                            className="mt-6 bg-blue-500 rounded-lg px-4 py-3"
+                            className="mt-6 rounded-lg px-4 py-3"
+                            style={{ backgroundColor: colors.primary }}
                         >
-                            <Text className="text-white font-semibold">
+                            <ThemedText 
+                                className="font-semibold text-center"
+                                lightColor="white"
+                                darkColor="white"
+                            >
                                 {isEditing ? "Update Note" : "Save Note"}
-                            </Text>
+                            </ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ScrollView>
