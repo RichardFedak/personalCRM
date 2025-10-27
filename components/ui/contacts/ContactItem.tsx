@@ -1,10 +1,11 @@
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { Colors } from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Alert, TouchableOpacity } from "react-native";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { useTheme } from "@/hooks/use-theme";
-import { Colors } from "@/constants/theme";
 
 export type Contact = {
   id: number;
@@ -22,15 +23,16 @@ type ContactItemProps = {
 
 export function ContactItem({ contact, onDelete }: ContactItemProps) {
   const { colorScheme } = useTheme();
+  const { t } = useTranslation();
   const colors = Colors[colorScheme];
 
   const handleDelete = () => {
     Alert.alert(
-      "Delete Contact",
+      t.common.delete,
       `Are you sure you want to delete "${contact.name}"?`,
       [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", style: "destructive", onPress: () => onDelete(contact.id) },
+        { text: t.common.cancel, style: "cancel" },
+        { text: t.common.delete, style: "destructive", onPress: () => onDelete(contact.id) },
       ]
     );
   };
@@ -97,14 +99,14 @@ export function ContactItem({ contact, onDelete }: ContactItemProps) {
               darkColor={colors.textSecondary}
               className="text-xs"
             >
-              Created: {new Date(contact.created).toLocaleDateString()}
+              {t.contacts.created}: {new Date(contact.created).toLocaleDateString()}
             </ThemedText>
             <ThemedText 
               lightColor={colors.textSecondary} 
               darkColor={colors.textSecondary}
               className="text-xs"
             >
-              Last Edited: {new Date(contact.lastEdited).toLocaleDateString()}
+              {t.contacts.lastEdited}: {new Date(contact.lastEdited).toLocaleDateString()}
             </ThemedText>
           </ThemedView>
         </ThemedView>

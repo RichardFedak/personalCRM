@@ -1,16 +1,17 @@
 import LabeledInput from "@/components/labeled-input";
-import * as schema from "@/db/schema"; 
-import { ThemedView } from "@/components/themed-view";
 import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { Colors } from "@/constants/theme";
+import * as schema from "@/db/schema";
+import { useTheme } from "@/hooks/use-theme";
+import { useTranslation } from "@/hooks/useTranslation";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/expo-sqlite/driver";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
-import { eq } from "drizzle-orm";
-import { useTheme } from "@/hooks/use-theme";
-import { Colors } from "@/constants/theme";
 
 export default function NewNote(){
 
@@ -18,6 +19,7 @@ export default function NewNote(){
     const drizzleDb = drizzle(db, { schema });
     const router = useRouter();
     const { colorScheme } = useTheme();
+    const { t } = useTranslation();
     const colors = Colors[colorScheme];
     const { contactId, noteId, title: initialTitle, content: initialContent } = useLocalSearchParams<{ 
         contactId?: string; 
@@ -40,12 +42,12 @@ export default function NewNote(){
 
     const handleSave = async () => {
         if (!title.trim()) {
-            Alert.alert("Validation", "Please enter a title.");
+            Alert.alert(t.validation.noteTitleRequired, t.validation.noteTitleRequired);
             return;
         }
 
         if (!contactId) {
-            Alert.alert("Error", "Contact ID is required to save a note.");
+            Alert.alert(t.common.error, t.validation.noteContactIdRequired);
             return;
         }
 
@@ -64,7 +66,7 @@ export default function NewNote(){
                     .where(eq(schema.notes.id, Number(noteId)))
                     .run();
 
-                Alert.alert("Success", "Note updated successfully.");
+                Alert.alert(t.common.success, t.notes.noteUpdatedMessage);
             } else {
                 // Create new note
                 await drizzleDb
@@ -78,19 +80,19 @@ export default function NewNote(){
                     })
                     .run();
 
-                Alert.alert("Success", "Note saved successfully.");
+                Alert.alert(t.common.success, t.notes.noteCreatedMessage);
             }
 
             router.back();
         } catch (error) {
             console.error("Error saving note:", error);
-            Alert.alert("Error", "Failed to save note.");
+            Alert.alert(t.common.error, isEditing ? t.notes.noteUpdateFailedMessage : t.notes.noteCreationFailedMessage);
         }
     };
 
     return(
         <>
-            <Stack.Screen options={{ title: isEditing ? "Edit Note" : "New Note" }} />
+            <Stack.Screen options={{ title: isEditing ? t.common.edit + " " + t.notes.title : t.notes.newNote }} />
             <SafeAreaView
              edges={["left", "right", "bottom"]}
                 style={{ backgroundColor: colors.background }}
@@ -103,16 +105,16 @@ export default function NewNote(){
                 <ScrollView contentContainerStyle={{ padding: 16 }}>
                     <ThemedView className="mb-4" lightColor="transparent" darkColor="transparent">
                         <LabeledInput
-                            label="Title"
+                            label={t.notes.title}
                             value={title}
                             onChangeText={setTitle}
-                            placeholder="Enter note title"
+                            placeholder={t.notes.noteContentPlaceholder}
                         />
                         <LabeledInput
-                            label="Content"
+                            label={t.notes.noteContent}
                             value={content}
                             onChangeText={setContent}
-                            placeholder="Enter note content"
+                            placeholder={t.notes.noteContentPlaceholder}
                             multiline={true}
                             numberOfLines={8}
                         />
@@ -127,7 +129,7 @@ export default function NewNote(){
                                 lightColor="white"
                                 darkColor="white"
                             >
-                                {isEditing ? "Update Note" : "Save Note"}
+                                {isEditing ? t.common.edit : t.common.save}
                             </ThemedText>
                         </TouchableOpacity>
                     </ThemedView>

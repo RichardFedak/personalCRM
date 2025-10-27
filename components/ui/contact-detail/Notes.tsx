@@ -1,11 +1,12 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { Colors } from "@/constants/theme";
 import { Note } from "@/db/schema";
+import { useTheme } from "@/hooks/use-theme";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { TouchableOpacity, Alert, Pressable } from "react-native";
-import { useTheme } from "@/hooks/use-theme";
-import { Colors } from "@/constants/theme";
+import { Alert, Pressable, TouchableOpacity } from "react-native";
 
 export default function Notes({ notes, contactId, onDelete }: { 
   notes: Note[] | undefined; 
@@ -13,22 +14,23 @@ export default function Notes({ notes, contactId, onDelete }: {
   onDelete: (id: number) => void; 
 }) {
     const { colorScheme } = useTheme();
+    const { t } = useTranslation();
     const colors = Colors[colorScheme];
 
     const handleDelete = (note: Note) => {
         Alert.alert(
-            "Delete Note",
+            t.common.delete,
             `Are you sure you want to delete "${note.title || 'this note'}"?`,
             [
-                { text: "Cancel", style: "cancel" },
-                { text: "Delete", style: "destructive", onPress: () => onDelete(note.id) },
+                { text: t.common.cancel, style: "cancel" },
+                { text: t.common.delete, style: "destructive", onPress: () => onDelete(note.id) },
             ]
         );
     };
     return (
         <>
             <ThemedText type="title" className="text-xl font-bold mb-4">
-                Notes
+                {t.notes.title}
             </ThemedText>
 
             {notes && notes.length > 0 ? (
@@ -56,7 +58,7 @@ export default function Notes({ notes, contactId, onDelete }: {
                             <Pressable>
                                 <ThemedView className="flex-row justify-between items-start mb-1" lightColor="transparent" darkColor="transparent">
                                     <ThemedText className="font-semibold text-base flex-1">
-                                        {note.title || "Untitled Note"}
+                                        {note.title || t.notes.newNote}
                                     </ThemedText>
                                     <TouchableOpacity 
                                         onPress={(e) => {
@@ -86,7 +88,7 @@ export default function Notes({ notes, contactId, onDelete }: {
                                     lightColor={colors.textMuted}
                                     darkColor={colors.textMuted}
                                 >
-                                    Last Edited: {note.lastEdited}
+                                    {t.contacts.lastEdited}: {note.lastEdited}
                                 </ThemedText>
                             </Pressable>
                         </Link>
@@ -97,7 +99,7 @@ export default function Notes({ notes, contactId, onDelete }: {
                     lightColor={colors.textMuted}
                     darkColor={colors.textMuted}
                 >
-                    No notes yet
+                    {t.notes.noNotes}
                 </ThemedText>
             )}
             <Link

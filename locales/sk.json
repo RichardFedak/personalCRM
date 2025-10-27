@@ -1,0 +1,74 @@
+{
+  "common": {
+    "save": "Uložiť",
+    "cancel": "Zrušiť",
+    "delete": "Vymazať",
+    "edit": "Upraviť",
+    "add": "Pridať",
+    "search": "Hľadať",
+    "loading": "Načítava...",
+    "error": "Vyskytla sa chyba",
+    "success": "Úspech",
+    "confirm": "Potvrdiť"
+  },
+  "tabs": {
+    "contacts": "Kontakty",
+    "explore": "Preskúmať"
+  },
+  "contacts": {
+    "title": "Kontakty",
+    "addContact": "Pridať kontakt",
+    "searchPlaceholder": "Hľadať kontakty...",
+    "noContacts": "Žiadne kontakty nenájdené",
+    "contactDetails": "Detaily kontaktu",
+    "newContact": "Nový kontakt",
+    "lastEdited": "Posledná úprava",
+    "created": "Vytvorené",
+    "notFound": "Kontakt nenájdený"
+  },
+  "contactForm": {
+    "firstName": "Meno",
+    "lastName": "Priezvisko",
+    "email": "Email",
+    "phone": "Telefón",
+    "company": "Spoločnosť",
+    "notes": "Poznámky",
+    "address": "Adresa",
+    "firstNamePlaceholder": "Zadajte meno",
+    "lastNamePlaceholder": "Zadajte priezvisko",
+    "emailPlaceholder": "Zadajte emailovú adresu",
+    "phonePlaceholder": "Zadajte telefónne číslo",
+    "companyPlaceholder": "Zadajte názov spoločnosti",
+    "notesPlaceholder": "Zadajte poznámky"
+  },
+  "notes": {
+    "title": "Poznámky",
+    "addNote": "Pridať poznámku",
+    "newNote": "Nová poznámka",
+    "noNotes": "Žiadne poznámky",
+    "noteContent": "Obsah poznámky",
+    "noteContentPlaceholder": "Zadajte vašu poznámku...",
+    "noteCreatedMessage": "Poznámka bola úspešne vytvorená",
+    "noteUpdatedMessage": "Poznámka bola úspešne aktualizovaná",
+    "noteCreationFailedMessage": "Nepodarilo sa vytvoriť poznámku",
+    "noteUpdateFailedMessage": "Nepodarilo sa aktualizovať poznámku"
+  },
+  "validation": {
+    "required": "Toto pole je povinné",
+    "nameRequired": "Meno je povinné",
+    "noteTitleRequired": "Názov poznámky je povinný",
+    "noteContactIdRequired": "ID kontaktu je potrebné na uloženie poznámky",
+    "invalidEmail": "Zadajte platnú emailovú adresu",
+    "invalidPhone": "Zadajte platné telefónne číslo"
+  },
+  "settings": {
+    "title": "Nastavenia",
+    "theme": "Téma",
+    "language": "Jazyk",
+    "themeLight": "Svetlá",
+    "themeDark": "Tmavá",
+    "themeSystem": "Systémová",
+    "languageEnglish": "English",
+    "languageSlovak": "Slovenčina"
+  }
+}

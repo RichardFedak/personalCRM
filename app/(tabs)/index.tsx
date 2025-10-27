@@ -2,22 +2,28 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { ContactsFilter } from '@/components/ui/contacts/ContactsFilter';
 import { ContactsList } from '@/components/ui/contacts/ContactsList';
-import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { Colors } from '@/constants/theme';
 import * as schema from '@/db/schema';
+import { useTheme } from '@/hooks/use-theme';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Ionicons } from '@expo/vector-icons';
 import { desc, eq } from 'drizzle-orm';
 import { drizzle, useLiveQuery } from 'drizzle-orm/expo-sqlite';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useMemo, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import 'react-native-get-random-values';
-import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function HomeScreen() {
   const db = useSQLiteContext();
   const drizzleDb = drizzle(db, { schema });
+  const { t } = useTranslation();
+  const { colorScheme } = useTheme();
+  const colors = Colors[colorScheme];
+  const router = useRouter();
 
   const { data: contacts } = useLiveQuery(
     drizzleDb.select().from(schema.contacts)
@@ -50,9 +56,15 @@ export default function HomeScreen() {
       <ThemedView className="px-4 py-6">
         <View className="flex-row justify-between items-center mb-4">
           <ThemedText type="title" className="text-3xl font-bold">
-            My Contacts
+            {t.contacts.title}
           </ThemedText>
-          <ThemeSwitcher />
+          <TouchableOpacity 
+            className="p-2 rounded-full" 
+            activeOpacity={0.7}
+            onPress={() => router.push('/settings' as any)}
+          >
+            <Ionicons name="settings-outline" size={24} color={colors.tint} />
+          </TouchableOpacity>
         </View>
 
         <ContactsFilter

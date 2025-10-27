@@ -2,6 +2,7 @@ import { ThemedView } from "@/components/themed-view";
 import { ContactHeader } from "@/components/ui/contact-detail/ContactHeader";
 import Notes from "@/components/ui/contact-detail/Notes";
 import * as schema from "@/db/schema";
+import { useTranslation } from "@/hooks/useTranslation";
 import { desc, eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -16,6 +17,7 @@ export const options = {
 
 export default function ContactDetails() {
   const { userId } = useLocalSearchParams<{ userId: string }>();
+  const { t } = useTranslation();
 
   const db = useSQLiteContext();
   const drizzleDb = drizzle(db, { schema });
@@ -46,7 +48,7 @@ export default function ContactDetails() {
   if (!contact || contact.length === 0) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-white dark:bg-black">
-        <Text className="text-gray-500 dark:text-gray-300">Contact not found</Text>
+        <Text className="text-gray-500 dark:text-gray-300">{t.contacts.notFound}</Text>
       </SafeAreaView>
     );
   }

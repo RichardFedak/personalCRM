@@ -1,7 +1,8 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { useTheme } from "@/hooks/use-theme";
 import { Colors } from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type ContactFieldProps = {
   label: string;
@@ -45,6 +46,7 @@ type ContactHeaderProps = {
 
 export function ContactHeader({ address, phone }: ContactHeaderProps) {
   const { colorScheme } = useTheme();
+  const { t } = useTranslation();
   const colors = Colors[colorScheme];
 
   return (
@@ -54,8 +56,8 @@ export function ContactHeader({ address, phone }: ContactHeaderProps) {
       darkColor={colors.headerBackground}
       style={{ borderColor: colors.headerBorder }}
     >
-      <ContactField label="Address" value={address} />
-      <ContactField label="Phone number" value={phone} />
+      <ContactField label={t.contactForm.address} value={address} />
+      <ContactField label={t.contactForm.phone} value={phone} />
     </ThemedView>
   );
 }

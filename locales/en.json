@@ -1,0 +1,75 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm"
+  },
+  "tabs": {
+    "contacts": "Contacts",
+    "explore": "Explore"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "addContact": "Add Contact",
+    "searchPlaceholder": "Search contacts...",
+    "noContacts": "No contacts found",
+    "contactDetails": "Contact Details",
+    "newContact": "New Contact",
+    "newContactCreatedMessage": "New contact created successfully",
+    "lastEdited": "Last Edited",
+    "created": "Created",
+    "notFound": "Contact not found"
+  },
+  "contactForm": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "notes": "Notes",
+    "address": "Address",
+    "firstNamePlaceholder": "Enter first name",
+    "lastNamePlaceholder": "Enter last name",
+    "emailPlaceholder": "Enter email address",
+    "phonePlaceholder": "Enter phone number",
+    "companyPlaceholder": "Enter company name",
+    "notesPlaceholder": "Enter notes"
+  },
+  "notes": {
+    "title": "Notes",
+    "addNote": "Add Note",
+    "newNote": "New Note",
+    "noNotes": "No notes found",
+    "noteContent": "Note Content",
+    "noteContentPlaceholder": "Enter your note here...",
+    "noteCreatedMessage": "Note created successfully",
+    "noteUpdatedMessage": "Note updated successfully",
+    "noteCreationFailedMessage": "Failed to create note",
+    "noteUpdateFailedMessage": "Failed to update note"
+  },
+  "validation": {
+    "required": "This field is required",
+    "nameRequired": "Name is required",
+    "noteTitleRequired": "Note title is required",
+    "noteContactIdRequired": "Contact ID is required to save a note",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidPhone": "Please enter a valid phone number"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "languageEnglish": "English",
+    "languageSlovak": "Slovenčina"
+  }
+}

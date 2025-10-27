@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import '../global.css';
 
+import '@/locales';
+
 import migrations from '@/drizzle/migrations';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
@@ -11,9 +13,10 @@ import { SQLiteProvider, openDatabaseSync } from 'expo-sqlite';
 import React, { Suspense } from 'react';
 import { ActivityIndicator } from 'react-native';
 
-import { ThemeProvider, useTheme } from '@/hooks/use-theme';
 import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
+import { ThemeProvider, useTheme } from '@/hooks/use-theme';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -21,6 +24,7 @@ export const unstable_settings = {
 
 function AppContent() {
   const { colorScheme } = useTheme();
+  const { t } = useTranslation();
   const colors = Colors[colorScheme];
   const DATABASE_NAME = 'personalCRM';
   const expoDb = openDatabaseSync(DATABASE_NAME);
@@ -42,8 +46,9 @@ function AppContent() {
           >
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-              <Stack.Screen name="contact-new/index" options={{ title: "New contact"}} />
-              <Stack.Screen name="note-new/index" options={{ title: "New note"}} />
+              <Stack.Screen name="contact-new/index" options={{ title: t.contacts.newContact}} />
+              <Stack.Screen name="note-new/index" options={{ title: t.notes.newNote}} />
+              <Stack.Screen name="settings/index" options={{ title: t.settings.title}} />
             </Stack>
           </SQLiteProvider>
         </Suspense>

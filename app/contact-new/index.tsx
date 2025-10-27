@@ -1,6 +1,7 @@
 import LabeledInput from "@/components/labeled-input";
 import { ThemedView } from "@/components/themed-view";
 import * as schema from "@/db/schema";
+import { useTranslation } from "@/hooks/useTranslation";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -20,6 +21,7 @@ export default function NewContact() {
   const db = useSQLiteContext();
   const drizzleDb = drizzle(db, { schema });
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -27,7 +29,7 @@ export default function NewContact() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert("Validation", "Please enter a name.");
+      Alert.alert(t.validation.required, t.validation.nameRequired);
       return;
     }
 
@@ -47,13 +49,13 @@ export default function NewContact() {
         .run();
 
       router.back();
-      Alert.alert("Success", "Contact created successfully!");
+      Alert.alert(t.common.success, t.contacts.newContactCreatedMessage);
       setName("");
       setAddress("");
       setPhoneNumber("");
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "Failed to create contact.");
+      Alert.alert(t.common.error, t.common.error);
     }
   };
 
@@ -69,20 +71,23 @@ export default function NewContact() {
         <ScrollView contentContainerStyle={{ padding: 16 }}>
           <ThemedView className="mb-4">
             <LabeledInput
-              label="Name"
+              label={t.contactForm.firstName}
               value={name}
               onChangeText={setName}
+              placeholder={t.contactForm.firstNamePlaceholder}
             />
             <LabeledInput
-              label="Address"
+              label={t.contactForm.lastName}
               value={address}
               onChangeText={setAddress}
+              placeholder={t.contactForm.lastNamePlaceholder}
             />
             <LabeledInput
-              label="Phone Number"
+              label={t.contactForm.phone}
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               keyboardType="phone-pad"
+              placeholder={t.contactForm.phonePlaceholder}
             />
 
             <TouchableOpacity
@@ -91,7 +96,7 @@ export default function NewContact() {
               activeOpacity={0.8}
             >
               <Text className="text-white font-bold text-lg">
-                Save Contact
+                {t.common.save}
               </Text>
             </TouchableOpacity>
           </ThemedView>

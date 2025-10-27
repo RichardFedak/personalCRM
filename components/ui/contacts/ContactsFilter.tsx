@@ -1,9 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
-import { TextInput, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useTheme } from '@/hooks/use-theme';
 import { Colors } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Ionicons } from '@expo/vector-icons';
+import { TextInput, TouchableOpacity } from 'react-native';
 
 type ContactsFilterProps = {
   search: string;
@@ -14,6 +15,7 @@ type ContactsFilterProps = {
 
 export function ContactsFilter({ search, setSearch, sortBy, setSortBy }: ContactsFilterProps) {
   const { colorScheme } = useTheme();
+  const { t } = useTranslation();
   const colors = Colors[colorScheme];
 
   return (
@@ -25,7 +27,7 @@ export function ContactsFilter({ search, setSearch, sortBy, setSortBy }: Contact
       >
         <Ionicons name="search" size={18} color={colors.iconSecondary} />
         <TextInput
-          placeholder="Search by name..."
+          placeholder={t.contacts.searchPlaceholder}
           placeholderTextColor={colors.inputPlaceholder}
           className="flex-1 px-2 py-2"
           style={{ 
@@ -56,7 +58,7 @@ export function ContactsFilter({ search, setSearch, sortBy, setSortBy }: Contact
               lightColor={sortBy === option ? '#ffffff' : colors.buttonText}
               darkColor={sortBy === option ? '#ffffff' : colors.buttonText}
             >
-              {option === 'lastEdited' ? 'Last Edited' : 'Created'}
+              {option === 'lastEdited' ? t.contacts.lastEdited : t.contacts.created}
             </ThemedText>
           </TouchableOpacity>
         ))}
